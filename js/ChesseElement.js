@@ -10,6 +10,8 @@ class ChesseElement {
   static OBSTACLE_FIELD = 'obstacleField';
   static DOOR_FIELD = 'doorField';
 
+  static PATH_FINDING_MAX_STEPS = 1000;
+
   static checkIfTypeIsCorrect(type) {
     if( type === ChesseElement.EMPTY_FIELD ||
         type === ChesseElement.PEOPLE_FIELD ||
@@ -32,7 +34,7 @@ class ChesseElement {
     this.type = type;
 
     //Znajdujemy pole które znajduje się pod podanymi w konstruktorze koordynatami
-    const _chessField = findChesseFieldIndexByCoordinates(x, y);
+    const _chessField = getChesseFieldByCoordinates(x, y);
 
     if(_chessField !== null &&_chessField.chesseElement === null) {
         //Po sprawdzeniu, że pole istnieje, oraz, że pole nie ma przypisanego elementu lecimy dalej
@@ -67,7 +69,7 @@ class ChesseElement {
     //TODO: dodać sprawdzenie, czy pole na które chcemy przesunąć element jest dostępne dla danego elementu
     //tip: z pomocą przychodzi funkcja getAvailableMoves
 
-    const destChesseField = findChesseFieldIndexByCoordinates(x, y);
+    const destChesseField = getChesseFieldByCoordinates(x, y);
 
     if(!destChesseField.checkIfEmpty()) {
         console.error("Pole docelowe jest zajęte");
@@ -87,33 +89,73 @@ class ChesseElement {
   }
 
   findPathToClosestDoor = function() {
-    //TODO TODO
-  }
+    let paths = new Array();
+    const doors = getDoors();
+    //Tworzymy historię ruchów dla każdych ruchów
+    doors.forEach((door) => {
+      paths.push({door, moveHistory: new Array()});
+    })
 
-  getAvailableMoves = function() {
-    if(this.type !== ChesseElement.PEOPLE_FIELD) {
-        console.error('Ruch jest dozwolony tylko dla elementów typu człowiek.');
-        return false;
-    }
+    let counter = 0;
 
-    let possibleMoves = new Array();
+    doors.forEach((door, index) => {
+      //Nie chcemy przesuwać elementów podczas ustalania najkrótszej drogi - przypisujemy pozycje do zmiennych lokalnych
+      let currentX = this.x;
+      let currentY = this.y;
+      while(true) {
+        let finish = false;
+        const currentField = getChesseFieldByCoordinates(currentX, currentY);
+        const currentMoves = currentField.getAvailableMoves();
 
-    //Ruch w górę może być możliwy
-    if(this.y !== ChesseField.FIELD_START)
-        possibleMoves.push(findChesseFieldIndexByCoordinates(this.x, this.y - 1));
-    //Ruch w dół może być możliwy
-    if(this.y !== ChesseField.FIELD_END)
-        possibleMoves.push(findChesseFieldIndexByCoordinates(this.x, this.y + 1));
-    //Ruch w prawo może być możliwy
-    if(this.x !== ChesseField.FIELD_START)
-        possibleMoves.push(findChesseFieldIndexByCoordinates(this.x - 1, this.y));
-    //Ruch w lewo może być możliwy
-    if(this.x !== ChesseField.FIELD_END)
-        possibleMoves.push(findChesseFieldIndexByCoordinates(this.x + 1, this.y));
+        let closestMove = { move: null, distance: 0 };
 
-    //Ostateczna weryfikacja czy pola są puste i jest możliwy ruch w ich miejsce
-    return possibleMoves.filter(function(possibleMove) {
-        return possibleMove.checkIfEmpty();
+        currentMoves.forEach((move) => {
+          const g = Math.abs(currentX - move.x) + Math.abs(currentY - move.y);
+          const h = Math.abs(move.x - door.x) + Math.abs(move.y - door.y);
+          const distance = g + h;
+
+          if(closestMove.move === null || closestMove.distance > distance)
+            closestMove = { move, distance };
+
+          //Drzwi znajdują się w dostępnych ruchach - kończymy zabawę
+          if(move.x === door.x && move.y === door.y)
+            finish = true;
+        });
+        
+        //Dodajemy najkorzystniejszy ruch do historii ścieżek dla danych drzwi
+        paths[index].moveHistory.push(closestMove);
+        //Wirtualnie "poruszamy" naszym elementem
+        currentX = closestMove.move.x, currentY = closestMove.move.y;
+
+        //Koniec pętli dla danych drzwi - lecimy ze znalezieniem ścieżki dla kolejnych
+        if(finish)
+          return;
+
+        //Zabezpieczenie na wypadek błędów i wpadnięcia w pętle bez końca
+        counter++;
+        if(counter > ChesseElement.PATH_FINDING_MAX_STEPS) {
+          console.log("1000 ruchów .. coś jest nie tak");
+          return false;
+        }
+      }
     });
+
+    //Mamy już wszystkie ścieżki dla wszystkich drzwi - szukamy która ma najmniej ruchów
+    //poprzez sortowanie od najmniejszej ilości ruchów do największej
+    //To można by ładniej napisać :c Franek zrób coś z tym!
+    paths.sort((pathA, pathB) => {
+      if(pathA.moveHistory.length < pathB.moveHistory.length)
+        return -1;
+      else if (pathA.moveHistory.length > pathB.moveHistory.length)
+        return 1;
+      else
+        return 0;
+    });
+
+    //To też brzydkie
+    console.log(`Drzwi znajdujące się najbliżej pola ${this.x} | ${this.y} 
+               znajdują się na polu ${paths[0].door.x} | ${paths[0].door.y}
+               dystans wynosi ${paths[0].moveHistory.length} ruchów`);
+    console.log(paths[0].moveHistory);
   }
 }

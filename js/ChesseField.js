@@ -25,4 +25,26 @@ class ChesseField {
   } else
       return true;
   }
+
+  getAvailableMoves = function() {
+    let possibleMoves = new Array();
+
+    //Ruch w górę może być możliwy
+    if(this.y !== ChesseField.FIELD_START)
+        possibleMoves.push(getChesseFieldByCoordinates(this.x, this.y - 1));
+    //Ruch w dół może być możliwy
+    if(this.y !== ChesseField.FIELD_END)
+        possibleMoves.push(getChesseFieldByCoordinates(this.x, this.y + 1));
+    //Ruch w prawo może być możliwy
+    if(this.x !== ChesseField.FIELD_START)
+        possibleMoves.push(getChesseFieldByCoordinates(this.x - 1, this.y));
+    //Ruch w lewo może być możliwy
+    if(this.x !== ChesseField.FIELD_END)
+        possibleMoves.push(getChesseFieldByCoordinates(this.x + 1, this.y));
+
+    //Ostateczna weryfikacja czy pola są puste i jest możliwy ruch w ich miejsce
+    return possibleMoves.filter(function(possibleMove) {
+        return possibleMove.checkIfEmpty();
+    });
+  }
 }
