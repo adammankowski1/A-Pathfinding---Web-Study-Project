@@ -18,6 +18,6 @@ DOSTEPNE RUCHY ELEMENTU
 
 chesseMapElements[X].getAvailableMoves();
 
-ZNALEZIENIE NAJKRÓTSZEJ DROGI DO NAJBLIŻSZYCH DRZWI (TODO)
+ZNALEZIENIE NAJKRÓTSZEJ DROGI DO NAJBLIŻSZYCH DRZWI (Algorytm A* - bez przeszkód)
 
 chesseMapElements[X].findPathToClosestDoor();
