@@ -22,13 +22,17 @@ function initChesseFields() {
     new ChesseElement(3, 6, ChesseElement.OBSTACLE_FIELD), //1
     new ChesseElement(2, 4, ChesseElement.OBSTACLE_FIELD), //2
     new ChesseElement(7, 4, ChesseElement.OBSTACLE_FIELD), //3
-    new ChesseElement(2, 1, ChesseElement.DOOR_FIELD), //4
-    new ChesseElement(8, 8, ChesseElement.DOOR_FIELD), //5
-    new ChesseElement(2, 8, ChesseElement.DOOR_FIELD), //6
-    new ChesseElement(4, 3, ChesseElement.PEOPLE_FIELD), //7
-    new ChesseElement(4, 4, ChesseElement.PEOPLE_FIELD), //8
-    new ChesseElement(4, 5, ChesseElement.PEOPLE_FIELD), //9
-    new ChesseElement(1, 4, ChesseElement.PEOPLE_FIELD), //10
+    new ChesseElement(3, 3, ChesseElement.OBSTACLE_FIELD), //4
+    new ChesseElement(4, 2, ChesseElement.OBSTACLE_FIELD), //5
+    new ChesseElement(6, 3, ChesseElement.OBSTACLE_FIELD), //6
+    new ChesseElement(5, 2, ChesseElement.OBSTACLE_FIELD), //7
+    new ChesseElement(2, 1, ChesseElement.DOOR_FIELD), //8
+    new ChesseElement(8, 8, ChesseElement.DOOR_FIELD), //9
+    new ChesseElement(2, 8, ChesseElement.DOOR_FIELD), //10
+    new ChesseElement(4, 3, ChesseElement.PEOPLE_FIELD), //11
+    new ChesseElement(4, 4, ChesseElement.PEOPLE_FIELD), //12
+    new ChesseElement(4, 5, ChesseElement.PEOPLE_FIELD), //13
+    new ChesseElement(1, 4, ChesseElement.PEOPLE_FIELD), //14
   ]
 }
 
