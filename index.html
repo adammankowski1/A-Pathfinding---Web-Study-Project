@@ -7,37 +7,46 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
+        body {
+            max-width: 1920px;
+            display: flex;
+            background-color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         #szachownica {
             display: flex;
             flex-wrap: wrap;
-            width: 400px;
-            height: 400px;
+            width: 50vw;
+            height: 50vw;
+            border: 8px solid black;
+            box-sizing: border-box;
         }
 
         #szachownica>div {
-            height: 50px;
-            width: 50px;
+            height: 12.5%;
+            width: 12.5%;
             background-color: white;
         }
 
-        #szachownica > div > .field {
-            height: 25px;
-            width: 25px;
+        #szachownica>div>.field {
+            height: 50%;
+            width: 50%;
             position: relative;
             top: 25%;
             left: 25%;
         }
 
-        #szachownica > div > .peopleField {
-            background-color: blue;
+        #szachownica>div>.peopleField {
+            background-color: rgb(46, 46, 155);
         }
 
-        #szachownica > div > .obstacleField {
-            background-color: red;
+        #szachownica>div>.obstacleField {
+            background-color: rgb(197, 12, 12);
         }
 
-        #szachownica > div > .doorField {
-            background-color: green;
+        #szachownica>div>.doorField {
+            background-color: rgb(49, 124, 26);
         }
 
         #szachownica div:nth-child(-2n+8),
@@ -49,6 +58,84 @@
         #szachownica div:nth-child(48)~div:nth-child(-2n+56),
         #szachownica div:nth-child(56)~div:nth-child(-2n+63) {
             background-color: black;
+        }
+
+        #forms {
+            display: flex;
+            width: 50vw;
+        }
+
+        #forms h1 {
+            font-size: 18px;
+        }
+
+        .form-obstacles {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-obstacles div {
+            display: flex;
+            justify-content: center;
+            width: 16.6vw;
+        }
+
+        .form-obstacles input {
+            width: 20%;
+            margin-left: 10px;
+        }
+
+        .form-obstacles h1 {
+            color: rgb(197, 12, 12);
+        }
+
+
+        .form-person {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-person div {
+            display: flex;
+            justify-content: center;
+            width: 16.6vw;
+        }
+
+        .form-person input {
+            width: 20%;
+            margin-left: 10px;
+        }
+
+        .form-person h1 {
+            color: rgb(46, 46, 155);
+        }
+
+        .form-doors {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-doors div {
+            display: flex;
+            justify-content: center;
+            width: 16.6vw;
+        }
+
+        .form-doors input {
+            width: 20%;
+            margin-left: 10px;
+        }
+
+        .form-doors h1 {
+            color: rgb(49, 124, 26);
+        }
+
+        #forms button {
+            margin-top: 10px;
+            width: 50%;
         }
     </style>
 </head>
@@ -120,13 +207,115 @@
         <div></div>
         <div></div>
     </div>
+    <div id="forms">
+        <form class="form-obstacles">
+            <h1>Obstacles</h1>
+            <div>
+                <label>1</label>
+                <input type="number" placeholder="x" min='0' max='7'>
+                <input type="number" placeholder="y" min='0' max='7'>
+            </div>
+            <div>
+                <label>2</label>
+                <input type="number" placeholder="x" min='0' max='7'>
+                <input type="number" placeholder="y" min='0' max='7'>
+            </div>
+            <div>
+                <label>3</label>
+                <input type="number" placeholder="x" min='0' max='7'>
+                <input type="number" placeholder="y" min='0' max='7'>
+            </div>
+            <div>
+                <label>4</label>
+                <input type="number" placeholder="x" min='0' max='7'>
+                <input type="number" placeholder="y" min='0' max='7'>
+            </div>
+            <div>
+                <label>5</label>
+                <input type="number" placeholder="x" min='0' max='7'>
+                <input type="number" placeholder="y" min='0' max='7'>
+            </div>
+            <div>
+                <label>6</label>
+                <input type="number" placeholder="x" min='0' max='7'>
+                <input type="number" placeholder="y" min='0' max='7'>
+            </div>
+            <div>
+                <label>7</label>
+                <input type="number" placeholder="x" min='0' max='7'>
+                <input type="number" placeholder="y" min='0' max='7'>
+            </div>
+            <div>
+                <label>8</label>
+                <input type="number" placeholder="x" min='0' max='7'>
+                <input type="number" placeholder="y" min='0' max='7'>
+            </div>
+            <div>
+                <label>9</label>
+                <input type="number" placeholder="x" min='0' max='7'>
+                <input type="number" placeholder="y" min='0' max='7'>
+            </div>
+            <button>create</button>
+
+        </form>
+        <form class="form-person">
+            <h1>Person</h1>
+            <div>
+                <label>1</label>
+                <input type="number" placeholder="x">
+                <input type="number" placeholder="y">
+            </div>
+            <div>
+                <label>2</label>
+                <input type="number" placeholder="x">
+                <input type="number" placeholder="y">
+            </div>
+            <div>
+                <label>3</label>
+                <input type="number" placeholder="x">
+                <input type="number" placeholder="y">
+            </div>
+            <div>
+                <label>4</label>
+                <input type="number" placeholder="x">
+                <input type="number" placeholder="y">
+            </div>
+            <div>
+                <label>5</label>
+                <input type="number" placeholder="x">
+                <input type="number" placeholder="y">
+            </div>
+            <button>create</button>
+        </form>
+        <form class="form-doors">
+            <h1>Doors</h1>
+            <div>
+                <label>1</label>
+                <input type="number" placeholder="x">
+                <input type="number" placeholder="y">
+            </div>
+            <div>
+                <label>2</label>
+                <input type="number" placeholder="x">
+                <input type="number" placeholder="y">
+            </div>
+            <div>
+                <label>3</label>
+                <input type="number" placeholder="x">
+                <input type="number" placeholder="y">
+            </div>
+            <button>create</button>
+        </form>
+    </div>
+
+
+
+
 
     <script src="./js/Console.js"></script>
     <script src="./js/ChesseField.js"></script>
     <script src="./js/ChesseElement.js"></script>
     <script src="./js/ChesseMap.js"></script>
-    <script>
-    </script>
 </body>
 
 </html>
