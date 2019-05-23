@@ -53,7 +53,8 @@ class ChesseElement {
       this.chesseField.chesseElement = this;
     } else {
       //W sumie w tym przypadku nie powinniśmy dodawać elementu do tablicy
-      console.error(`Pole ${this.x} | ${this.y} zawiera już element lub jest ono nieprawidłowe`)
+      console.error(`Pole ${this.x} | ${this.y} zawiera już element lub jest ono nieprawidłowe`);
+      return [];
     }
   }
 

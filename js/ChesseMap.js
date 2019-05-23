@@ -1,42 +1,88 @@
 chesseFields = new Array();
 chesseMapElements = new Array();
 
-const btnAddObstacles = document.querySelector('.form-obstacles button');
+const btnAddObstacle = document.querySelector('.form-obstacle button');
 const btnAddPerson = document.querySelector('.form-person button');
-const btnAddDoors = document.querySelector('.form-doors button');
+const btnAddDoor = document.querySelector('.form-door button');
+const btnClearBoard = document.querySelector('.clear');
+const btnStart = document.querySelector('.start');
 
-const createObstacles = (e) => {
-  e.preventDefault() //stopowanie odświeżenia strony
-  //pobranie inputów przeszkód i sprawdzenie czy nie są puste
-  const obstaclesList = [...document.querySelectorAll('.form-obstacles input')];
-  const isEmpty = obstaclesList.filter(item => !item.value)
-  if (isEmpty.length > 0) return alert('wypełnij wszystkie pola!')
-  //wszystkie inputy idą w jednym formularzu więc po kolei z nich otrzymujemy x i y
-  const obstaclesCoordX = []
-  const obstaclesCoordY = []
-  let counter = 0
-  //tutaj rozdzielamy z jednej tablocy x i y na oddzielną tab dla xy i dla y
-  obstaclesList.forEach((item) => {
-    if (counter % 2 === 0) {
-      obstaclesCoordX.push(item.value)
-      counter++
-    } else {
-      obstaclesCoordY.push(item.value)
-      counter++
-    }
-  })
-  //tworzymy liste koordynatów przeszkód
-  const obstaclesCoord = [];
-  for (let i = 0; i < obstaclesCoordX.length; i++) {
-    obstaclesCoord.push({
-      x: obstaclesCoordX[i],
-      y: obstaclesCoordY[i]
-    })
-
-  }
-  console.log(obstaclesCoord)
+const clearBoard = () => {
+  chesseMapElements.forEach(chesseElement => {
+    chesseElement.chesseField.fCost = 0;
+    chesseElement.chesseField.gCost = 0;
+    chesseElement.chesseField.hCost = 0;
+    chesseElement.chesseField.parent = {
+      x: chesseElement.chesseField.x,
+      y: chesseElement.chesseField.y
+    };
+    chesseElement.divElement.outerHTML = "";
+    chesseElement.chesseField.chesseElement = null;
+    delete(chesseElement);
+  });
+  chesseMapElements = new Array();
+  console.log('obsługa czyszczenia tablicy')
 }
-btnAddObstacles.addEventListener('click', createObstacles)
+const startTest = () => {
+  //do napisania start gry
+  console.log('obsługa rozpoczecia gry')
+}
+
+const addField = (action, e) => {
+  e.preventDefault()
+  switch (action) {
+    case ChesseElement.OBSTACLE_FIELD:
+      const obstacle = document.querySelectorAll('.form-obstacle input');
+      if (obstacle[0].value && obstacle[1].value !== '') {
+        if ((obstacle[0].value > 0 && obstacle[0].value < 9) && (obstacle[1].value > 0 && obstacle[1].value < 9)) {
+          const chesseElement = new ChesseElement(+obstacle[0].value, +obstacle[1].value, ChesseElement.OBSTACLE_FIELD);
+          if (chesseElement instanceof ChesseElement)
+            chesseMapElements.push(chesseElement);
+        } else {
+          return alert('wproawdzane liczby musza być z zakresu 1-8')
+        }
+      } else {
+        return alert('wypełnij pola!')
+      }
+      break;
+    case ChesseElement.PEOPLE_FIELD:
+      const person = document.querySelectorAll('.form-person input');
+      if (person[0].value && person[1].value !== '') {
+        if ((person[0].value > 0 && person[0].value < 9) && (person[1].value > 0 && person[1].value < 9)) {
+          const chesseElement = new ChesseElement(+person[0].value, +person[1].value, ChesseElement.PEOPLE_FIELD)
+          if (chesseElement instanceof ChesseElement)
+            chesseMapElements.push(chesseElement);
+        } else {
+          return alert('wproawdzane liczby musza być z zakresu 1-8')
+        }
+      } else {
+        return alert('wypełnij pola!')
+      }
+      break;
+    case ChesseElement.DOOR_FIELD:
+      const door = document.querySelectorAll('.form-door input');
+      if (door[0].value && door[1].value !== '') {
+        if ((door[0].value > 0 && door[0].value < 9) && (door[1].value > 0 && door[1].value < 9)) {
+          const chesseElement = new ChesseElement(+door[0].value, +door[1].value, ChesseElement.DOOR_FIELD)
+          if (chesseElement instanceof ChesseElement)
+            chesseMapElements.push(chesseElement);
+        } else {
+          return alert('wproawdzane liczby musza być z zakresu 1-8')
+        }
+      } else {
+        return alert('wypełnij pola!')
+      }
+      break;
+    default:
+      return alert('Wrong action')
+  }
+  console.log(chesseMapElements);
+}
+btnAddObstacle.addEventListener('click', addField.bind(this, ChesseElement.OBSTACLE_FIELD))
+btnAddPerson.addEventListener('click', addField.bind(this, ChesseElement.PEOPLE_FIELD))
+btnAddDoor.addEventListener('click', addField.bind(this, ChesseElement.DOOR_FIELD))
+btnStart.addEventListener('click', startTest)
+btnClearBoard.addEventListener('click', clearBoard)
 
 
 
