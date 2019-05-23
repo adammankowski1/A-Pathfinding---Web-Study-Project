@@ -67,8 +67,6 @@ class ChesseElement {
       console.error('Ruch jest dozwolony tylko dla elementów typu człowiek.');
       return false;
     }
-    //TODO: dodać sprawdzenie, czy pole na które chcemy przesunąć element jest dostępne dla danego elementu
-    //tip: z pomocą przychodzi funkcja getAvailableMoves
 
     const destChesseField = getChesseFieldByCoordinates(x, y);
 
@@ -87,6 +85,10 @@ class ChesseElement {
 
     //Przenosimy element do nowego rodzica (z jednego pola na drugie)
     this.chesseField.divElement.appendChild(this.divElement);
+  }
+
+  moveByPath = function (path, index) {
+
   }
 
   findPathToClosestDoor = function () {
@@ -125,52 +127,26 @@ class ChesseElement {
       });
 
       const startNode = this.chesseField;
-      const endNode = door;
       paths[index].open.push(startNode);
-      while (true) {
+      while (paths[index].open.length > 0) {
         let current = paths[index].open[0];
         for (let i = 1; i < paths[index].open.length; i++) {
           if (paths[index].open[i].fCost < current.fCost || paths[index].open[i].fCost == current.fCost)
             if (paths[index].open[i].hCost < current.hCost)
+              //Ruch z otwartych z najmniejszą wartością fCost
               current = paths[index].open[i];
-        }
-        // //Sortujemy otwarte tak, aby znaleźc ruch z najmniejszą wartośćią fCost
-        // paths[index].open.sort((moveA, moveB) => {
-        //   if (moveA.fCost < moveB.fCost)
-        //     return -1;
-        //   else
-        //     return 1;
-        // });
-
-        //Ruch z otwartych z najmniejszą wartością fCost
-
-        console.log(console.log(paths[index].open));
-
-        if (current === undefined)
-          console.log('test');
-
-        if (current.x === 5 && current.y === 4) {
-          console.log("zamykam");
-          console.log(paths[index].open);
-          console.log(current);
         }
 
         //Usuwamy nasz ruch z otwartych
         paths[index].open = paths[index].open.filter((move) => {
-          if (move.x === current.x && move.y === current.y) {
-            console.log(`Usuwanko: ${move.x} | ${move.y}`)
+          if (move.x === current.x && move.y === current.y)
             return false;
-          } else
+          else
             return true;
         });
-        console.log("Po usuwanku");
-
-
 
         //Przenosimy ten ruch do zamkniętych
         paths[index].closed.push(current);
-        console.log(`Zamykam: ${current.x} | ${current.y}`)
-        current.divElement.style.backgroundColor = 'red';
 
         //Jesteśmy na docelowym polu - kończymy zabawę
         if (current.x === door.x && current.y === door.y) {
@@ -181,7 +157,6 @@ class ChesseElement {
           return;
         }
 
-
         const currentField = getChesseFieldByCoordinates(current.x, current.y);
         const currentMoves = currentField.getAvailableMoves();
 
@@ -189,18 +164,10 @@ class ChesseElement {
           if (paths[index].closed.find(closedMove => closedMove.x === move.x && closedMove.y === move.y) !== undefined)
             return;
 
-          //currentX, currentY - pozycja startowa. Node to punkt startowy.
-          //current.x, current.y - obecnie sprawdzana pozycja
-          //neighbour (albo move.x, move.y) - obecnie sprawdzany ruch dla powyższej pozycji
-          // const nodeGCost = Math.abs(currentX - current.x) + Math.abs(currentY - current.y);
-          // const nodeHCost = getDistance(current, move);
-          //const neighbourGCost = move.gCost
           const newCostToNeighbour = current.gCost + getDistance(current, move);
           if (newCostToNeighbour < move.gCost ||
             paths[index].open.find(openMove => openMove.x === move.x && openMove.y === move.y) === undefined) {
             if (paths[index].open.find(openMove => openMove.x === move.x && openMove.y === move.y) === undefined) {
-              // const hFinalCost = getDistance(move, door);
-              // const fCost = newCostToNeighbour + hFinalCost;
               move.gCost = newCostToNeighbour;
               move.hCost = getDistance(move, door);
               move.fCost = move.gCost + move.hCost;
@@ -208,16 +175,7 @@ class ChesseElement {
               move.parent.y = current.y;
 
               paths[index].open.push(move);
-              if (move.x === 5 && move.y === 4) {
-                console.log("otwieram");
-                console.log(paths[index].open);
-                console.log(move);
-              }
-              console.log(`Otwieram: ${move.x} | ${move.y}`)
-              move.divElement.style.backgroundColor = 'green';
             } else {
-              //const hFinalCost = getDistance(move, door);
-              //const fCost = newCostToNeighbour + hFinalCost;
               paths[index].open = paths[index].open.map((_move) => {
                 if (_move.x === move.x && _move.y === move.y) {
                   _move.gCost = newCostToNeighbour;
@@ -242,6 +200,11 @@ class ChesseElement {
       }
     });
 
+
+    //Usuwamy ścieżki do drzwi przy których nie udało się ustalić trasy (bo nie istnieje taka trasa) 
+    paths = paths.filter(path => {
+      return path.finalPath.length !== 0;
+    });
     //Mamy już wszystkie ścieżki dla wszystkich drzwi - szukamy która ma najmniej ruchów
     //poprzez sortowanie od najmniejszej ilości ruchów do największej
     paths.sort((pathA, pathB) => {
@@ -253,12 +216,16 @@ class ChesseElement {
         return 0;
     });
 
-    //Kolorowanie ścieżki do najbliższych drzwi
-    paths[0].finalPath.forEach((move) => {
-      const pathField = getChesseFieldByCoordinates(move.x, move.y);
-      pathField.divElement.style.backgroundColor = '#99ccff';
-    });
 
-    console.log(paths);
+    if (paths.length === 0)
+      alert(`Dla człowieka z pozycji X: ${currentX} | Y: ${currentY} nie ma już ratunku. Nie istnieje ścieżka ewakuacyjna :(`);
+    else {
+      //Kolorowanie ścieżki do najbliższych drzwi
+      paths[0].finalPath.forEach((move) => {
+        const pathField = getChesseFieldByCoordinates(move.x, move.y);
+        pathField.divElement.style.backgroundColor = '#99ccff';
+      });
+      return paths[0].finalPath;
+    }
   }
 }

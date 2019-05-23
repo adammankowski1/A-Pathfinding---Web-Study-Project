@@ -8,23 +8,58 @@ const btnClearBoard = document.querySelector('.clear');
 const btnStart = document.querySelector('.start');
 
 const clearBoard = () => {
-  chesseMapElements.forEach(chesseElement => {
-    chesseElement.chesseField.fCost = 0;
-    chesseElement.chesseField.gCost = 0;
-    chesseElement.chesseField.hCost = 0;
-    chesseElement.chesseField.parent = {
-      x: chesseElement.chesseField.x,
-      y: chesseElement.chesseField.y
+  chesseFields = chesseFields.map(chesseField => {
+    chesseField.fCost = 0;
+    chesseField.gCost = 0;
+    chesseField.hCost = 0;
+    chesseField.parent = {
+      x: chesseField.x,
+      y: chesseField.y
     };
-    chesseElement.divElement.outerHTML = "";
-    chesseElement.chesseField.chesseElement = null;
-    delete(chesseElement);
-  });
+    if (chesseField.chesseElement != null) {
+      chesseField.chesseElement.divElement.outerHTML = "";
+      delete(chesseField.chesseElement);
+      chesseField.chesseElement = null;
+    }
+    chesseField.divElement.style = "";
+    chesseField.divElement.innerHTML = "";
+    return chesseField;
+  })
   chesseMapElements = new Array();
   console.log('obsługa czyszczenia tablicy')
 }
 const startTest = () => {
   //do napisania start gry
+  chesseMapElements.forEach(chesseElement => {
+    if (chesseElement.type === ChesseElement.PEOPLE_FIELD) {
+      const way = chesseElement.findPathToClosestDoor(); //sciezka
+      const p = document.createElement('p')
+      p.textContent += 'KONIEC: '
+      way.forEach((item, index) => {
+        if (index !== way.length - 1) {
+          p.textContent += `${item.x},${item.y} => `
+        } else {
+          p.textContent += `${item.x},${item.y}`
+        }
+      })
+      p.textContent += ` :START(${chesseElement.x},${chesseElement.y})`
+      document.querySelector('.way').appendChild(p)
+
+
+      chesseElement.chesseField.fCost = 0;
+      chesseElement.chesseField.gCost = 0;
+      chesseElement.chesseField.hCost = 0;
+      chesseElement.chesseField.parent = {
+        x: chesseElement.chesseField.x,
+        y: chesseElement.chesseField.y
+      };
+      //chesseElement.divElement.outerHTML = "";
+      //chesseElement.chesseField.chesseElement = null;
+      //delete(chesseElement);
+      return false;
+    } else
+      return true;
+  });
   console.log('obsługa rozpoczecia gry')
 }
 

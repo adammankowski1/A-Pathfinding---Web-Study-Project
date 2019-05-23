@@ -7,11 +7,20 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 18px;
+        }
+
+
+        .container {
             max-width: 1920px;
             display: flex;
             background-color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            justify-content: center;
         }
 
         #szachownica {
@@ -19,6 +28,9 @@
             flex-wrap: wrap;
             width: 50vw;
             height: 50vw;
+            max-width: 95vh;
+            max-height: 95vh;
+            margin: 10px 10px;
             border: 8px solid black;
             box-sizing: border-box;
         }
@@ -61,257 +73,253 @@
         }
 
         #forms {
-            display: flex;
-            width: 50vw;
+            margin: 10px 10px;
         }
 
-        #forms h1 {
-            font-size: 18px;
+        .form-obstacle,
+        .form-person,
+        .form-door {
+            width: 100%;
+            padding: 10px 10px;
         }
 
-        .form-obstacles {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        p::first-letter {
+            text-transform: uppercase;
         }
 
-        .form-obstacles div {
-            display: flex;
-            justify-content: center;
-            width: 16.6vw;
-        }
-
-        .form-obstacles input {
-            width: 20%;
-            margin-left: 10px;
-        }
-
-        .form-obstacles h1 {
+        .form-obstacle p {
             color: rgb(197, 12, 12);
+            padding-bottom: 5px;
+            font-weight: bold;
         }
 
-
-        .form-person {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .form-obstacle input {
+            border: 1px solid rgb(197, 12, 12);
+            color: rgb(49, 124, 26);
+            padding: 2px 4px;
+            min-width: 20%;
         }
 
-        .form-person div {
-            display: flex;
-            justify-content: center;
-            width: 16.6vw;
+        .form-obstacle input:focus {
+            outline: 2px solid rgb(197, 12, 12);
+        }
+
+        .form-obstacle button {
+            color: white;
+            background-color: rgb(197, 12, 12);
+            padding: 2px 8px;
+            border: 2px solid transparent;
+        }
+
+        .form-obstacle button:hover {
+            color: rgb(197, 12, 12);
+            background-color: white;
+            padding: 2px 8px;
+            font-weight: bold;
+            border: 2px solid rgb(197, 12, 12);
+        }
+
+        .form-person p {
+            color: rgb(46, 46, 155);
+            padding-bottom: 5px;
+            font-weight: bold;
         }
 
         .form-person input {
-            width: 20%;
-            margin-left: 10px;
-        }
-
-        .form-person h1 {
-            color: rgb(46, 46, 155);
-        }
-
-        .form-doors {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .form-doors div {
-            display: flex;
-            justify-content: center;
-            width: 16.6vw;
-        }
-
-        .form-doors input {
-            width: 20%;
-            margin-left: 10px;
-        }
-
-        .form-doors h1 {
+            border: 1px solid rgb(46, 46, 155);
             color: rgb(49, 124, 26);
+            padding: 2px 4px;
+            min-width: 20%;
         }
 
-        #forms button {
-            margin-top: 10px;
-            width: 50%;
+        .form-person input:focus {
+            outline: 2px solid rgb(46, 46, 155);
+        }
+
+        .form-person button {
+            color: white;
+            background-color: rgb(46, 46, 155);
+            padding: 2px 8px;
+            border: 2px solid transparent;
+        }
+
+        .form-person button:hover {
+            color: rgb(46, 46, 155);
+            background-color: white;
+            padding: 2px 8px;
+            font-weight: bold;
+            border: 2px solid rgb(46, 46, 155);
+        }
+
+        .form-door p {
+            color: rgb(49, 124, 26);
+            padding-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-door input {
+            border: 1px solid rgb(49, 124, 26);
+            color: rgb(49, 124, 26);
+            padding: 2px 4px;
+            min-width: 20%;
+        }
+
+        .form-door input:focus {
+            outline: 2px solid rgb(49, 124, 26);
+        }
+
+        .form-door button {
+            color: white;
+            background-color: rgb(49, 124, 26);
+            padding: 2px 8px;
+            border: 2px solid transparent;
+        }
+
+        .form-door button:hover {
+            color: rgb(49, 124, 26);
+            background-color: white;
+            padding: 2px 8px;
+            font-weight: bold;
+            border: 2px solid rgb(49, 124, 26);
+        }
+
+        .clear {
+            margin: 10px 10px;
+            color: white;
+            background-color: black;
+            padding: 2px 8px;
+            border: 2px solid transparent;
+        }
+
+        .clear:hover {
+            color: black;
+            background-color: white;
+            padding: 2px 8px;
+            border: 2px solid black
+        }
+
+        .start {
+            margin: 10px 10px;
+            color: white;
+            background-color: black;
+            padding: 2px 8px;
+            font-weight: bold;
+            border: 2px solid transparent;
+        }
+
+        .start:hover {
+            color: black;
+            background-color: white;
+            padding: 2px 8px;
+            border: 2px solid black
+        }
+
+        .way {
+            width: 80vw;
+            margin: 10px auto;
+        }
+
+        .way p {
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
-    <div id="szachownica">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+    <div class='container'>
+        <div id="szachownica">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div id="forms">
+            <form class="form-obstacle">
+                <p>obstacle</p>
+                <input type="number" placeholder="x" min='0' max='7'>
+                <input type="number" placeholder="y" min='0' max='7'>
+                <button>Add</button>
+
+            </form>
+            <form class="form-person">
+                <p>Person</p>
+                <input type="number" placeholder="x" min='0' max='7'>
+                <input type="number" placeholder="y" min='0' max='7'>
+                <button>Add</button>
+            </form>
+            <form class="form-door">
+                <p>door</p>
+                <input type="number" placeholder="x" min='0' max='7'>
+                <input type="number" placeholder="y" min='0' max='7'>
+                <button>Add</button>
+            </form>
+            <button class="start">Run test</button>
+            <button class="clear">Clear board</button>
+        </div>
     </div>
-    <div id="forms">
-        <form class="form-obstacles">
-            <h1>Obstacles</h1>
-            <div>
-                <label>1</label>
-                <input type="number" placeholder="x" min='0' max='7'>
-                <input type="number" placeholder="y" min='0' max='7'>
-            </div>
-            <div>
-                <label>2</label>
-                <input type="number" placeholder="x" min='0' max='7'>
-                <input type="number" placeholder="y" min='0' max='7'>
-            </div>
-            <div>
-                <label>3</label>
-                <input type="number" placeholder="x" min='0' max='7'>
-                <input type="number" placeholder="y" min='0' max='7'>
-            </div>
-            <div>
-                <label>4</label>
-                <input type="number" placeholder="x" min='0' max='7'>
-                <input type="number" placeholder="y" min='0' max='7'>
-            </div>
-            <div>
-                <label>5</label>
-                <input type="number" placeholder="x" min='0' max='7'>
-                <input type="number" placeholder="y" min='0' max='7'>
-            </div>
-            <div>
-                <label>6</label>
-                <input type="number" placeholder="x" min='0' max='7'>
-                <input type="number" placeholder="y" min='0' max='7'>
-            </div>
-            <div>
-                <label>7</label>
-                <input type="number" placeholder="x" min='0' max='7'>
-                <input type="number" placeholder="y" min='0' max='7'>
-            </div>
-            <div>
-                <label>8</label>
-                <input type="number" placeholder="x" min='0' max='7'>
-                <input type="number" placeholder="y" min='0' max='7'>
-            </div>
-            <div>
-                <label>9</label>
-                <input type="number" placeholder="x" min='0' max='7'>
-                <input type="number" placeholder="y" min='0' max='7'>
-            </div>
-            <button>create</button>
-
-        </form>
-        <form class="form-person">
-            <h1>Person</h1>
-            <div>
-                <label>1</label>
-                <input type="number" placeholder="x">
-                <input type="number" placeholder="y">
-            </div>
-            <div>
-                <label>2</label>
-                <input type="number" placeholder="x">
-                <input type="number" placeholder="y">
-            </div>
-            <div>
-                <label>3</label>
-                <input type="number" placeholder="x">
-                <input type="number" placeholder="y">
-            </div>
-            <div>
-                <label>4</label>
-                <input type="number" placeholder="x">
-                <input type="number" placeholder="y">
-            </div>
-            <div>
-                <label>5</label>
-                <input type="number" placeholder="x">
-                <input type="number" placeholder="y">
-            </div>
-            <button>create</button>
-        </form>
-        <form class="form-doors">
-            <h1>Doors</h1>
-            <div>
-                <label>1</label>
-                <input type="number" placeholder="x">
-                <input type="number" placeholder="y">
-            </div>
-            <div>
-                <label>2</label>
-                <input type="number" placeholder="x">
-                <input type="number" placeholder="y">
-            </div>
-            <div>
-                <label>3</label>
-                <input type="number" placeholder="x">
-                <input type="number" placeholder="y">
-            </div>
-            <button>create</button>
-        </form>
-    </div>
-
-
-
-
-
+    <div class="way"></div>
     <script src="./js/Console.js"></script>
     <script src="./js/ChesseField.js"></script>
     <script src="./js/ChesseElement.js"></script>
