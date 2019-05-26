@@ -34,7 +34,7 @@ const startTest = () => {
     if (chesseElement.type === ChesseElement.PEOPLE_FIELD) {
       const way = chesseElement.findPathToClosestDoor(); //sciezka
       const p = document.createElement('p')
-      p.textContent += 'KONIEC: '
+      p.textContent += `START(${chesseElement.x},${chesseElement.y}): `
       way.forEach((item, index) => {
         if (index !== way.length - 1) {
           p.textContent += `${item.x},${item.y} => `
@@ -42,7 +42,7 @@ const startTest = () => {
           p.textContent += `${item.x},${item.y}`
         }
       })
-      p.textContent += ` :START(${chesseElement.x},${chesseElement.y})`
+      p.textContent += ` :KONIEC (DRZWI) - LICZBA RUCHÓW DO UCIECZKI: ${way.length}`
       document.querySelector('.way').appendChild(p)
 
 
@@ -53,9 +53,6 @@ const startTest = () => {
         x: chesseElement.chesseField.x,
         y: chesseElement.chesseField.y
       };
-      //chesseElement.divElement.outerHTML = "";
-      //chesseElement.chesseField.chesseElement = null;
-      //delete(chesseElement);
       return false;
     } else
       return true;
@@ -111,7 +108,7 @@ const addField = (action, e) => {
     default:
       return alert('Wrong action')
   }
-  console.log(chesseMapElements);
+  //console.log(chesseMapElements);
 }
 btnAddObstacle.addEventListener('click', addField.bind(this, ChesseElement.OBSTACLE_FIELD))
 btnAddPerson.addEventListener('click', addField.bind(this, ChesseElement.PEOPLE_FIELD))

@@ -87,10 +87,6 @@ class ChesseElement {
     this.chesseField.divElement.appendChild(this.divElement);
   }
 
-  moveByPath = function (path, index) {
-
-  }
-
   findPathToClosestDoor = function () {
     if (this.type !== ChesseElement.PEOPLE_FIELD) {
       alert('Szukanie ścieżki jest dozwolone tylko dla elementów typu człowiek.');
@@ -113,8 +109,9 @@ class ChesseElement {
     //Nie chcemy przesuwać elementów podczas ustalania najkrótszej drogi - przypisujemy pozycje do zmiennych lokalnych
     let currentX = this.x;
     let currentY = this.y;
-    doors.forEach((door, index) => {
 
+    doors.forEach((door, index) => {
+      //Funkcja zerująca stan wszystkich pól
       chesseFields = chesseFields.map((field) => {
         field.fCost = 0;
         field.gCost = 0;
@@ -127,13 +124,17 @@ class ChesseElement {
       });
 
       const startNode = this.chesseField;
+      //Umieszczamy początkujący ruch w otwartych
       paths[index].open.push(startNode);
+
       while (paths[index].open.length > 0) {
+        //Przypisujemy obecny ruch jako pierwszy element z otwartych ruchów
+        //Zależy nam na znalezieniu ruchu z obecnie najmniejszmy kosztem - to poniżej
         let current = paths[index].open[0];
         for (let i = 1; i < paths[index].open.length; i++) {
           if (paths[index].open[i].fCost < current.fCost || paths[index].open[i].fCost == current.fCost)
             if (paths[index].open[i].hCost < current.hCost)
-              //Ruch z otwartych z najmniejszą wartością fCost
+              //Wybraliśmy ruch z otwartych z najmniejsym kosztem
               current = paths[index].open[i];
         }
 
@@ -150,6 +151,7 @@ class ChesseElement {
 
         //Jesteśmy na docelowym polu - kończymy zabawę
         if (current.x === door.x && current.y === door.y) {
+          paths[index].finalPath.push(door.chesseField);
           do {
             current = paths[index].closed.find(closedMove => closedMove.x === current.parent.x && closedMove.y === current.parent.y);
             paths[index].finalPath.push(current);
@@ -158,29 +160,37 @@ class ChesseElement {
         }
 
         const currentField = getChesseFieldByCoordinates(current.x, current.y);
+        //Znajdujemy możliwe ruchy dla aktualnie przetwarzanego ruchu
         const currentMoves = currentField.getAvailableMoves();
 
         currentMoves.forEach((move) => {
+          //Jeśli możliwy ruch znajduje się w czerwonych - pomijamy dalsze przetwarzanie kodu dla tego ruchu
           if (paths[index].closed.find(closedMove => closedMove.x === move.x && closedMove.y === move.y) !== undefined)
             return;
 
+          //Suma kosztów
+          //current.gCost - dystans od punktu startowego do obecnego miejsca, getDistance to dystans z obecnego miejsca (current), do nowego miejsca (move)
           const newCostToNeighbour = current.gCost + getDistance(current, move);
           if (newCostToNeighbour < move.gCost ||
             paths[index].open.find(openMove => openMove.x === move.x && openMove.y === move.y) === undefined) {
             if (paths[index].open.find(openMove => openMove.x === move.x && openMove.y === move.y) === undefined) {
-              move.gCost = newCostToNeighbour;
-              move.hCost = getDistance(move, door);
-              move.fCost = move.gCost + move.hCost;
+              //Ruchu nie ma w otwartych, zatem dodajemy go do tablicy z otwartymi
+              move.gCost = newCostToNeighbour; //nowy dystans od punktu startowego, do obecnego miejsca
+              move.hCost = getDistance(move, door); //nowy dystans od obecnego miejsca do drzwi
+              move.fCost = move.gCost + move.hCost; //łączny dystans - koszt (G + H)
+              //przypisanie z jakiego pola weszliśmy na dane pole
               move.parent.x = current.x;
               move.parent.y = current.y;
 
               paths[index].open.push(move);
             } else {
+              //Ruch jest w otwartych, zatem edytujemy go, zamiast dublować
               paths[index].open = paths[index].open.map((_move) => {
                 if (_move.x === move.x && _move.y === move.y) {
-                  _move.gCost = newCostToNeighbour;
-                  _move.hCost = getDistance(move, door);
-                  _move.fCost = move.gCost + move.hCost;
+                  _move.gCost = newCostToNeighbour; //nowy dystans od punktu startowego, do obecnego miejsca
+                  _move.hCost = getDistance(move, door); //nowy dystans od obecnego miejsca do drzwi
+                  _move.fCost = move.gCost + move.hCost;  //łączny dystans - koszt (G + H)
+                  //przypisanie z jakiego pola weszliśmy na dane pole
                   _move.parent.x = current.x;
                   _move.parent.y = current.y;
                   return _move;
@@ -225,7 +235,7 @@ class ChesseElement {
         const pathField = getChesseFieldByCoordinates(move.x, move.y);
         pathField.divElement.style.backgroundColor = '#99ccff';
       });
-      return paths[0].finalPath;
+      return paths[0].finalPath.reverse();
     }
   }
 }
