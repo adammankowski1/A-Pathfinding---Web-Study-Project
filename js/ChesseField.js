@@ -16,7 +16,7 @@ class ChesseField {
 
   constructor(x, y, divElement) {
     if (!Number.isInteger(x) || !Number.isInteger(y) || divElement == null) {
-      console.log("Nieprawidłowe parametry pola");
+      alert("Nieprawidłowe parametry pola");
       return false;
     }
     this.x = x;
@@ -27,7 +27,6 @@ class ChesseField {
   checkIfEmpty() {
     if (this.chesseElement !== null && this.chesseElement.type !== ChesseElement.DOOR_FIELD) {
       //chesseElement nie jest puste, oraz nie jest DRZWIAMI - nie można w to pole przenieść żadnego elementu
-      //console.error("Pole docelowe jest zajęte");
       return false;
     } else
       return true;

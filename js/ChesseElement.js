@@ -25,7 +25,7 @@ class ChesseElement {
 
   constructor(x, y, type) {
     if (!Number.isInteger(x) || !Number.isInteger(y) || !ChesseElement.checkIfTypeIsCorrect(type)) {
-      console.log("Nieprawidłowe parametry elementu");
+      alert("Nieprawidłowe parametry elementu");
       return false;
     }
 
@@ -53,7 +53,7 @@ class ChesseElement {
       this.chesseField.chesseElement = this;
     } else {
       //W sumie w tym przypadku nie powinniśmy dodawać elementu do tablicy
-      console.error(`Pole ${this.x} | ${this.y} zawiera już element lub jest ono nieprawidłowe`);
+      alert(`Pole ${this.x} | ${this.y} zawiera już element lub jest ono nieprawidłowe`);
       return [];
     }
   }
@@ -64,14 +64,14 @@ class ChesseElement {
 
   move = function (x, y) {
     if (this.type !== ChesseElement.PEOPLE_FIELD) {
-      console.error('Ruch jest dozwolony tylko dla elementów typu człowiek.');
+      alert('Ruch jest dozwolony tylko dla elementów typu człowiek.');
       return false;
     }
 
     const destChesseField = getChesseFieldByCoordinates(x, y);
 
     if (!destChesseField.checkIfEmpty()) {
-      console.error("Pole docelowe jest zajęte");
+      alert("Pole docelowe jest zajęte");
       return false;
     }
 
@@ -93,7 +93,7 @@ class ChesseElement {
 
   findPathToClosestDoor = function () {
     if (this.type !== ChesseElement.PEOPLE_FIELD) {
-      console.error('Szukanie ścieżki jest dozwolone tylko dla elementów typu człowiek.');
+      alert('Szukanie ścieżki jest dozwolone tylko dla elementów typu człowiek.');
       return false;
     }
     let paths = new Array();
@@ -194,7 +194,7 @@ class ChesseElement {
         //Zabezpieczenie na wypadek błędów i wpadnięcia w pętle bez końca
         counter++;
         if (counter > ChesseElement.PATH_FINDING_MAX_STEPS) {
-          console.log("10000 ruchów .. coś jest nie tak");
+          alert("10000 ruchów .. coś jest nie tak");
           return false;
         }
       }
