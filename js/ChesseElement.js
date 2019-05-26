@@ -94,23 +94,20 @@ class ChesseElement {
     }
     let paths = new Array();
     const doors = getDoors();
-    //Tworzymy historię ruchów dla każdych ruchów
-    doors.forEach((door) => {
+
+    let counter = 0;
+
+    //Nie chcemy przesuwać elementów podczas ustalania najkrótszej drogi - przypisujemy pozycje do zmiennych lokalnych
+    const startNode = this.chesseField;
+
+    doors.forEach((door, index) => {
+      //Tworzymy historię ruchów dla każdych ruchów
       paths.push({
         door,
         open: new Array(),
         closed: new Array(),
         finalPath: new Array()
       });
-    })
-
-    let counter = 0;
-
-    //Nie chcemy przesuwać elementów podczas ustalania najkrótszej drogi - przypisujemy pozycje do zmiennych lokalnych
-    let currentX = this.x;
-    let currentY = this.y;
-
-    doors.forEach((door, index) => {
       //Funkcja zerująca stan wszystkich pól
       chesseFields = chesseFields.map((field) => {
         field.fCost = 0;
@@ -123,7 +120,7 @@ class ChesseElement {
         return field;
       });
 
-      const startNode = this.chesseField;
+      
       //Umieszczamy początkujący ruch w otwartych
       paths[index].open.push(startNode);
 
@@ -155,7 +152,7 @@ class ChesseElement {
           do {
             current = paths[index].closed.find(closedMove => closedMove.x === current.parent.x && closedMove.y === current.parent.y);
             paths[index].finalPath.push(current);
-          } while (!(current.parent.x === currentX && current.parent.y === currentY))
+          } while (!(current.parent.x === startNode.x && current.parent.y === startNode.y))
           return;
         }
 
@@ -228,7 +225,7 @@ class ChesseElement {
 
 
     if (paths.length === 0)
-      alert(`Dla człowieka z pozycji X: ${currentX} | Y: ${currentY} nie ma już ratunku. Nie istnieje ścieżka ewakuacyjna :(`);
+      alert(`Dla człowieka z pozycji X: ${startNode.x} | Y: ${startNode.y} nie ma już ratunku. Nie istnieje ścieżka ewakuacyjna :(`);
     else {
       //Kolorowanie ścieżki do najbliższych drzwi
       paths[0].finalPath.forEach((move) => {
