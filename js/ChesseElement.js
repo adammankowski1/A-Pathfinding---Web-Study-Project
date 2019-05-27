@@ -92,23 +92,25 @@ class ChesseElement {
       alert('Szukanie ścieżki jest dozwolone tylko dla elementów typu człowiek.');
       return false;
     }
+		//Zmienna w której będziemy przechowywać ruchy: otwarte, zamknięte oraz docelową ścieżkę dla każdych drzwi
+		//Ruchy otwarte to te, których jeszcze nie przeanalizowaliśmy - nie ustaliliśmy, czy warto ten ruch wykorzystać w drodze do drzwi
+		//Ruchy zamknięte to te, które już przeanalizowaliśmy. Po zakończeniu pracy algorytmu zostaną one ponownie przeanalizowane w celu odnalezienia scieżki z punktu docelowego do punktu początkowego
     let paths = new Array();
+		//Znajdujemy wszystkie drzwi w pomieszczeniu i zapisujemy je do tablicy
     const doors = getDoors();
-
-    let counter = 0;
 
     //Nie chcemy przesuwać elementów podczas ustalania najkrótszej drogi - przypisujemy pozycje do zmiennych lokalnych
     const startNode = this.chesseField;
 
     doors.forEach((door, index) => {
-      //Tworzymy historię ruchów dla każdych ruchów
+      //Tworzymy początkowy obiekt z historią ruchów
       paths.push({
         door,
         open: new Array(),
         closed: new Array(),
         finalPath: new Array()
       });
-      //Funkcja zerująca stan wszystkich pól
+      //Funkcja zerująca stan wszystkich pól (konieczne w przypadku iteracji algorytmu dla większej liczby drzwi) 
       chesseFields = chesseFields.map((field) => {
         field.fCost = 0;
         field.gCost = 0;
@@ -120,18 +122,20 @@ class ChesseElement {
         return field;
       });
 
-      
       //Umieszczamy początkujący ruch w otwartych
       paths[index].open.push(startNode);
-
+			
+			
+			//Wykonujemy pętle dopóki w tablicy z otwartymi znajdują się jakiekolwiek ruchy do sprawdzenia
       while (paths[index].open.length > 0) {
-        //Przypisujemy obecny ruch jako pierwszy element z otwartych ruchów
-        //Zależy nam na znalezieniu ruchu z obecnie najmniejszmy kosztem - to poniżej
+        //Przypisujemy pierwszy element z otwartych ruchów obecny ruch jako obecny
         let current = paths[index].open[0];
+				//Ale to nie musi być ruch z najmniejszmy kosztem, na czym nam zależy. Poszukiwanie takiego ruchu poniżej.
         for (let i = 1; i < paths[index].open.length; i++) {
           if (paths[index].open[i].fCost < current.fCost || paths[index].open[i].fCost == current.fCost)
+						//W przypadku, gdy koszt całkowity F jest mniejszy, sprawdzamy jeszcze koszt H, aby wybrać ruch znajdujący się bliżej drzwi
             if (paths[index].open[i].hCost < current.hCost)
-              //Wybraliśmy ruch z otwartych z najmniejsym kosztem
+              //Wybraliśmy ruch z otwartych z najmniejsym kosztem F oraz najmniejszmy kosztem H
               current = paths[index].open[i];
         }
 
@@ -148,26 +152,33 @@ class ChesseElement {
 
         //Jesteśmy na docelowym polu - kończymy zabawę
         if (current.x === door.x && current.y === door.y) {
+					//Dodajemy drzwi jako pierwszy ruch na naszej ostatecznej, najkrótszej ścieżce
           paths[index].finalPath.push(door.chesseField);
+					//Wyszukujemy ścieżkę z punktu końcowego, na którym się znajdujemy (drzwi) do punktu z którego zaczynaliśmy wyszukiwanie ścieżki
           do {
+						//Każdy ruch w zamkniętych ma przypisanego "rodzica". Rodzic ten jest ruchem poprzednim, tym z którego weszliśmy na pole na którym obecnie się znajdujemy.
             current = paths[index].closed.find(closedMove => closedMove.x === current.parent.x && closedMove.y === current.parent.y);
+						//Dodajemy ów rodzica do tablicy z najkrótszą ścieżką
             paths[index].finalPath.push(current);
           } while (!(current.parent.x === startNode.x && current.parent.y === startNode.y))
           return;
         }
 
+				//Trochę obiektowości, znajdujemy obiekt pola za pomocą koordynat aktualnie przetwarzanego ruchu
         const currentField = getChesseFieldByCoordinates(current.x, current.y);
         //Znajdujemy możliwe ruchy dla aktualnie przetwarzanego ruchu
         const currentMoves = currentField.getAvailableMoves();
 
+				//Przetwarzamy każdy z powyżej znalezionych ruchów
         currentMoves.forEach((move) => {
-          //Jeśli możliwy ruch znajduje się w czerwonych - pomijamy dalsze przetwarzanie kodu dla tego ruchu
+          //Jeśli możliwy ruch znajduje się w czerwonych - pomijamy dalsze przetwarzanie kodu dla tego ruchu nie ma sensu
           if (paths[index].closed.find(closedMove => closedMove.x === move.x && closedMove.y === move.y) !== undefined)
             return;
 
           //Suma kosztów
           //current.gCost - dystans od punktu startowego do obecnego miejsca, getDistance to dystans z obecnego miejsca (current), do nowego miejsca (move)
           const newCostToNeighbour = current.gCost + getDistance(current, move);
+					//Jeśli nowy koszt dojścia na pole move jest mniejszy od obecnego kosztu, lub jeśli ruchu nie ma w otwartych
           if (newCostToNeighbour < move.gCost ||
             paths[index].open.find(openMove => openMove.x === move.x && openMove.y === move.y) === undefined) {
             if (paths[index].open.find(openMove => openMove.x === move.x && openMove.y === move.y) === undefined) {
@@ -197,16 +208,8 @@ class ChesseElement {
             }
           }
         });
-
-        //Zabezpieczenie na wypadek błędów i wpadnięcia w pętle bez końca
-        counter++;
-        if (counter > ChesseElement.PATH_FINDING_MAX_STEPS) {
-          alert("10000 ruchów .. coś jest nie tak");
-          return false;
-        }
       }
     });
-
 
     //Usuwamy ścieżki do drzwi przy których nie udało się ustalić trasy (bo nie istnieje taka trasa) 
     paths = paths.filter(path => {
